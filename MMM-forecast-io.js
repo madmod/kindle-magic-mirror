@@ -76,6 +76,7 @@ Module.register("MMM-forecast-io", {
 
   updateWeather: function () {
     if (this.geoLocationLookupFailed) {
+			console.error('geo lookup failed!');
       return;
     }
     if (this.shouldLookupGeolocation() && !this.geoLocationLookupSuccess) {
@@ -83,16 +84,35 @@ Module.register("MMM-forecast-io", {
       return;
     }
 
+
     var units = this.config.unitTable[this.config.units] || 'auto';
 
     var url = this.config.apiBase+'/'+this.config.apiKey+'/'+this.config.latitude+','+this.config.longitude+'?units='+units+'&lang='+this.config.language;
+
     if (this.config.data) {
       // for debugging
       this.processWeather(this.config.data);
     } else {
-      window.getJSONP(url, this.processWeather.bind(this), this.processWeatherError.bind(this));
+			var self = this;
+      this.getWeatherData(url, function () { self.processWeather.apply(self, arguments) }, function () { self.processWeatherError.apply(self, arguments) });
     }
   },
+
+	getWeatherData: function (url, callback, onError) {
+		var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+		window[callbackName] = function(data) {
+			delete window[callbackName];
+			document.body.removeChild(script);
+			callback(data);
+		};
+
+		var script = document.createElement('script');
+		script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+		if (onError) {
+			script.onerror = onError;
+		}
+		document.body.appendChild(script);
+	},
 
   processWeather: function (data) {
     if (this.config.debug) {
@@ -339,6 +359,7 @@ Module.register("MMM-forecast-io", {
   },
 
   getLocation: function () {
+		console.log('trying to get location');
     var self = this;
     navigator.geolocation.getCurrentPosition(
       function (location) {

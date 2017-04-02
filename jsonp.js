@@ -1,4 +1,5 @@
 window.getJSONP = function (url, callback, onError) {
+	console.log('get jsonp')
   var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
   window[callbackName] = function(data) {
     delete window[callbackName];

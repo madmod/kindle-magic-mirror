@@ -9,7 +9,7 @@ html {
 }
 
 body {
-  margin: 60px;
+  margin: 20px 50px;
   position: absolute;
   height: calc(100% - 120px);
   width: calc(100% - 120px);
@@ -44,18 +44,18 @@ body {
 }
 
 .small {
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 40px;
+  line-height: 50px;
 }
 
 .medium {
-  font-size: 30px;
-  line-height: 35px;
+  font-size: 60px;
+  line-height: 70px;
 }
 
 .large {
-  font-size: 65px;
-  line-height: 65px;
+  font-size: 130px;
+  line-height: 130px;
 }
 
 .xlarge {

@@ -1,8 +1,10 @@
+'use strict';
 
 
 window.Log = console;
 
 window._modules = [];
+
 
 window.Module = {
 
@@ -29,16 +31,19 @@ window.Module = {
 		};
 
 		// Get scripts
-		for (var script of module.getScripts.call(context)) {
-			var s = document.createElement( 'script' );
-			s.setAttribute( 'src', script );
-			document.body.appendChild( s );
-		}
+		_.each(module.getScripts.call(context), function (script) {
+			console.log('load script', script);
+			var s = document.createElement('script');
+			s.setAttribute('src', script);
+			s.setAttribute('type', 'text/javascript');
+			document.body.appendChild(s);
+		});
 
 		// Get styles
-		for (var style of module.getStyles.call(context)) {
+		_.each(module.getStyles.call(context), function (style) {
+			if (style === 'weather-icons.css') return;
 			container.insertAdjacentHTML('beforeEnd', '<link href="' + style + '" rel="stylesheet">');
-		}
+		});
 
 		// Get Dom
 		Module.updateDom(container, id, module, context);
@@ -47,21 +52,34 @@ window.Module = {
 
 		// Start
 		// TODO: Should start be called first?
-		module.start.call(context);
+		setTimeout(function () {
+			try {
+				module.start.call(context);
+			}
+			catch (err) {
+				console.log('module start uncaught error', id);
+				console.error(err);
+			}
+		});
 	},
 
 	updateDom: function (container, id, module, context) {
 		if (context._element) container.removeChild(context._element);
-		context._element = module.getDom.call(context);
+		try {
+			context._element = module.getDom.call(context);
+		}
+		catch (err) {
+			console.log('module updateDom uncaught error', id);
+			console.error(err);
+		}
 		context._element.classList.add(id);
-		console.log('updateDom', context._element);
 		container.appendChild(context._element);
 	},
 
 	init: function () {
-		for (var module of _modules) {
+		_.each(_modules, function (module) {
 			Module.initModule.apply(this, module);
-		}
+		});
 		console.log('init success');
 	},
 

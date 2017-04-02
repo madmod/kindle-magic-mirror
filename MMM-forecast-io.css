@@ -11,12 +11,14 @@
 }
 
 .MMM-forecast-io .summary {
-  width: 400px;
+  margin-top: 1ex;
+  width: 700px;
 }
 
 .MMM-forecast-io .forecast {
+	font-size: 40px !important;
   text-align: left;
-  min-width: 400px;
+  min-width: 700px;
   margin-top: 1ex;
 }
 
@@ -30,7 +32,7 @@
 
 .MMM-forecast-io .forecast-row .forecast-day {
   text-align: left;
-  padding-right: 0.2em;
+  padding-right: 0.8em;
 }
 .MMM-forecast-io .forecast-row .weathericon {
   text-align: center;
